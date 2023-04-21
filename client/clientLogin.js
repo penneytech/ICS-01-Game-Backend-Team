@@ -5,6 +5,7 @@ This code defines a function that handles a client login attempt.  When a client
 // Import the required functions and modules
 const globals = require("../globals.js");
 const credentials = require("../credentials.json");
+let clientFailCounter = 0;
 
 // Define a function to handle a client login attempt
 function clientLogin(data, socket, io) {
@@ -42,7 +43,20 @@ function clientLogin(data, socket, io) {
 
     // Send message to the client saying that login was unsuccessful
     socket.emit('loginFailed', 'Invalid username or password');
+
+    clientFailCounter++; 
   }
+}
+
+function deleteLoginButton(){
+  
+}
+
+if (clientFailCounter == 4) {
+  console.log(" !!WARNING!! Too many failed login attemps.");
+  console.log("One more attempt before IP is stolen");
+}else if (clientFailCounter >=5) {
+  deactivateLoginButton();
 }
 
 // Export the function for other modules to use
