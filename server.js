@@ -20,6 +20,9 @@ const clientLogin = require('./client/clientLogin.js');
 const clientMessage = require('./client/clientMessage.js'); 
 const clientDisconnect = require('./client/clientDisconnect.js'); 
 
+// Generate Food
+require('./foodManagement.js');
+
 let intervalID;
 
 io.on('connection', (socket) => {

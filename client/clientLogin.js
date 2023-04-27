@@ -24,6 +24,14 @@ function clientLogin(data, socket, io) {
     // Send message to the client saying that login was successful
     socket.emit('loginSucceed');
 
+    // Import food array global here
+
+    socket.emit(globals.getGlobal("foodArray", foodArray));
+
+    // Get food array global
+    // Send food array to the client using 'socket.emit("foodsync", foodArray)';
+
+
     // Update the random connectedclient to include the user name of the logged in user
     let connectedclients = globals.getGlobal("connectedclients");
     const clientIndex = connectedclients.findIndex(client => client.id === socket.id);
@@ -44,19 +52,20 @@ function clientLogin(data, socket, io) {
     // Send message to the client saying that login was unsuccessful
     socket.emit('loginFailed', 'Invalid username or password');
 
-    clientFailCounter++; 
+    clientFailCounter++;
   }
 }
 
-function deleteLoginButton(){
-  
+function deactivateLoginButton() {
+
 }
 
 if (clientFailCounter == 4) {
   console.log(" !!WARNING!! Too many failed login attemps.");
   console.log("One more attempt before IP is stolen");
-}else if (clientFailCounter >=5) {
+} else if (clientFailCounter >= 5) {
   deactivateLoginButton();
+  clientFailCounter == 0;
 }
 
 // Export the function for other modules to use
