@@ -3,8 +3,6 @@ const globals = require('../globals.js');
 function clientConnect(socket) {
     console.log("");
     console.log('A user connected.');
-
-  // socket.emit('leaderboarddata', array) 
   
    /********************
    * Update List Of Connected Clients
