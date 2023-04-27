@@ -59,3 +59,7 @@ socket.on("update", (data) => {
 socket.on("disconnect", () => {
     console.log("Disconnected from server");
 });
+
+const maxTotalScore = require('./datamanagement/maxTotalScore.js');
+
+console.log(mydata);

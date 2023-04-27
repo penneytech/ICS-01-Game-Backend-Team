@@ -14,52 +14,60 @@ app.use(cors());
 app.use(express.static('public'));
 
 // Our Imports
-const clientConnect = require('./client/clientConnect.js'); 
+const clientConnect = require('./client/clientConnect.js');
 const clientIdentify = require('./client/clientIdentify.js')
-const clientLogin = require('./client/clientLogin.js'); 
-const clientMessage = require('./client/clientMessage.js'); 
-const clientDisconnect = require('./client/clientDisconnect.js'); 
+const clientLogin = require('./client/clientLogin.js');
+const clientMessage = require('./client/clientMessage.js');
+const clientDisconnect = require('./client/clientDisconnect.js');
+const sortUsersByPoints = require('./datamanagement/getLeaderboard.js')
+
 
 let intervalID;
 
 io.on('connection', (socket) => {
+  // Handle Client Connections
+  clientConnect(socket);
 
-    // Handle Client Connections
-    clientConnect(socket);
-
-       // Handle Client Messages
-    socket.on('ident', (message) => {
+  // Handle Client Messages
+  socket.on('ident', (message) => {
     clientIdentify(message, socket, io)
-    });
+  });
 
-    socket.on('login', (message) => {
+  socket.on('login', (message) => {
     clientLogin(message, socket, io)
-    });
-    
-    // Handle Client Messages
-    socket.on('message', (message) => {
-    clientMessage(message, socket, io)
-    });
-    
-    // Handle Client Disconnections
-    socket.on('disconnect', () => {
-    clientDisconnect(socket, io);
-    });   
+  });
 
-        // Start sending test messages to all clients in the 'users' room
-    if (!intervalID) {
-        intervalID = setInterval(() => {
-            //console.log("Test message sent to users")
-            io.to('user').emit(
-                'message', 
-                'This is a test message from the server!');
-        }, 10000);
-    }
-    
+  // Handle Client Messages
+  socket.on('message', (message) => {
+    clientMessage(message, socket, io)
+  });
+
+  // Handle Client Disconnections
+  socket.on('disconnect', () => {
+    clientDisconnect(socket, io);
+  });
+
+  // Start sending test messages to all clients in the 'users' room
+  if (!intervalID) {
+    intervalID = setInterval(() => {
+      //console.log("Test message sent to users")
+      io.to('user').emit(
+        'message',
+        'This is a test message from the server!');
+    }, 10000);
+  }
+
+  // Handle Client Game End
+  socket.on('gameend', (message) => {
+    bubbleSort(message, socket, io)
+  });
+
 });
 
 server.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 
-    
+
 });
+
+sortUsersByPoints();
