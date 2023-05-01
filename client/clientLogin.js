@@ -1,5 +1,6 @@
 const globals = require("../globals.js");
-const credentials = require("../credentials.json");
+const credentials = require("./credentials.json");
+const { clientLoginSecurity } = require("./clientLoginSecurity.js");
 
 function clientLogin(data, socket, io) {
     console.log("");
@@ -25,17 +26,18 @@ function clientLogin(data, socket, io) {
             console.log("[clientLogin]: Setting name:", socket.id + " - " + data.username);
             connectedclients[clientIndex].username = data.username;
         }
-
-        // Emit the 'update' event to the 'frontendmonitor' room with the current list of user IDs
+// Emit the 'update' event to the 'frontendmonitor' room with the current list of user IDs
         console.log("[clientLogin]: Sending user ID's:", connectedclients);
         io.to('frontendmonitor').emit('update', connectedclients);
 
     } else {
         // No match was found
-        console.log(socket.id, "Invalid username or password");
+        //console.log(socket.id, "Invalid username or password");
+        
+        clientLoginSecurity(data, socket, io);
 
         // Send message to the client saying that login was unsuccessful
-        socket.emit('loginFailed', 'Invalid username or password');
+        //socket.emit('loginFailed', 'Invalid username or password');
     }
 }
 

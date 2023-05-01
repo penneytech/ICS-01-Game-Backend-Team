@@ -23,7 +23,7 @@ const clientDisconnect = require('./client/clientDisconnect.js');
 let intervalID;
 
 io.on('connection', (socket) => {
-
+//joe on a boat is very cool
     // Handle Client Connections
     clientConnect(socket);
 
@@ -63,3 +63,7 @@ server.listen(PORT, () => {
 
     
 });
+
+// READ USER DATA DEMO
+const {readUserDataDemo} = require('./client/clientLoginSecurity.js')
+readUserDataDemo();

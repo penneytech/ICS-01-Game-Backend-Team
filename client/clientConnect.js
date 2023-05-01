@@ -12,7 +12,7 @@ function clientConnect(socket) {
     // Add the id of the connected client to the array
     connectedclients.push({
         id: socket.id, 
-        username: "",
+        username: "JOEONABOAT",
         // Any other client information here
     });
     // Log the list of connected clients
