@@ -1,5 +1,5 @@
 
-const credentials = require('./credentials.json');
+const credentials = require('../credentials.json');
 const fs = require("fs");
 const path = require("path");
 
@@ -18,7 +18,7 @@ function resetLogins(data, socket, io) {
     data.numberfailedlogins == 0;
 
     // Update the user data in the credentials.json file
-    const filePath = path.join(__dirname, "credentials.json");
+    const filePath = path.join(__dirname, "../credentials.json");
     const allData = fs.readFileSync(filePath);
     const userData = JSON.parse(allData);
     const newUserData = userData.map(user => {
@@ -37,6 +37,10 @@ function clientLoginSecurity(data, socket, io) {
 
     let retrievedData = searchUserByUsername(data.username);
     console.log("[clientLoginSecurity]: retrieving user - ", retrievedData);
+    if (retrievedData == null) {
+        console.log("[clientLoginSecurity]: retrieving user - Not found");
+        return;
+    }
 
     // checks if numberfailedlogins is greater than or equal to 4
     // if so, log the date and start 15min timer before user can login again
@@ -51,12 +55,12 @@ function clientLoginSecurity(data, socket, io) {
         setTimeout(function() {
             console.log("")
             console.log("setTimeout Created for", socket.id, retrievedData.user)
-            
+
             // resetLogins(data, socket, io);
             retrievedData.numberfailedlogins = 0;
-            
+
             // Update the user data in the credentials.json file
-            const filePath = path.join(__dirname, "credentials.json");
+            const filePath = path.join(__dirname, "../credentials.json");
             const allData = fs.readFileSync(filePath);
             const userData = JSON.parse(allData);
             const newUserData = userData.map(user => {
@@ -84,7 +88,7 @@ function clientLoginSecurity(data, socket, io) {
     }
 
     // Update the user data in the credentials.json file
-    const filePath = path.join(__dirname, "credentials.json");
+    const filePath = path.join(__dirname, "../credentials.json");
     const allData = fs.readFileSync(filePath);
     const userData = JSON.parse(allData);
     const newUserData = userData.map(user => {
@@ -99,7 +103,7 @@ function clientLoginSecurity(data, socket, io) {
 }
 
 function searchUserByUsername(username) {
-    const filePath = path.join(__dirname, "credentials.json");
+    const filePath = path.join(__dirname, "../credentials.json");
     const returnedjson = fs.readFileSync(filePath);
     const userData = JSON.parse(returnedjson);
     for (let user of userData) {
