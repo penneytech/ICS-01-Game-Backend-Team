@@ -27,7 +27,7 @@ require('./foodManagement.js');
 let intervalID;
 
 io.on('connection', (socket) => {
-
+//joe on a boat is very cool
     // Handle Client Connections
     clientConnect(socket);
 
@@ -68,4 +68,5 @@ server.listen(PORT, () => {
 
 });
 
+// Sort user data by points
 sortUsersByPoints();
