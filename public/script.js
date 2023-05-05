@@ -16,6 +16,7 @@ socket.on("connect", () => {
         username: "frontendmonitor",
         password: "password"
     })
+
 });
 
 // When a new client list is received

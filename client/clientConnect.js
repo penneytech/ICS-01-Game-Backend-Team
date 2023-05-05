@@ -7,24 +7,31 @@ const globals = require('../globals.js');
 
 // Define a function to handle a client connection
 function clientConnect(socket) {
-  console.log("");
-  console.log('A user connected.');
+    console.log("");
+    console.log('A user connected.');
 
-  // Update list of connected clients
-  let connectedclients = globals.getGlobal('connectedclients');
+    // Send Food To Client
+    socket.emit("foodinit", globals.getGlobal("foodArray"));
 
-  // Add the id of the connected client to the array along with any other relevant client information
-  connectedclients.push({
-    id: socket.id, 
+
+// Update list of connected clients
+let connectedclients = globals.getGlobal('connectedclients');
+
+// Add the id of the connected client to the array along with any other relevant client information
+connectedclients.push({
+    id: socket.id,
     username: "",
+    xpos: 0,
+    ypos: 0,
+    currentscore: 0,
     // Any other client information here
-  });
+});
 
-  // Log the list of connected clients to the console
-  console.log('Connected clients:', connectedclients);
+// Log the list of connected clients to the console
+console.log('Connected clients:', connectedclients);
 
-  // Update the global variable with the updated array
-  globals.setGlobal('connectedclients', connectedclients);
+// Update the global variable with the updated array
+globals.setGlobal('connectedclients', connectedclients);
 }
 
 // Export the function for other modules to use
