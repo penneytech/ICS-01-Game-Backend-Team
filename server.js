@@ -20,6 +20,7 @@ const clientLogin = require('./client/clientLogin.js');
 const clientMessage = require('./client/clientMessage.js');
 const clientDisconnect = require('./client/clientDisconnect.js');
 const sortUsersByPoints = require('./datamanagement/getLeaderboard.js')
+const fooddelete = require('./fooddelete.js')
 
 // Generate Food
 require('./foodManagement.js');
@@ -45,6 +46,15 @@ io.on('connection', (socket) => {
         clientMessage(message, socket, io)
     });
 
+    socket.on('foodcollision', (message) => {
+        console.log(socket.id, message)
+        fooddelete(message, socket, io)
+    });
+
+  socket.on('foodarray', (message) => {
+        console.log(socket.id, message)
+    });
+    
     // Handle Client Disconnections
     socket.on('disconnect', () => {
         clientDisconnect(socket, io);

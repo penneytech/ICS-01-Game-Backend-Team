@@ -1,8 +1,8 @@
 // import {setGlobal} from './globals.js';
 
 let foodArray = []
-let display_width = 600;
-let display_height = 600;
+let display_width = 6000;
+let display_height = 6000;
 
 let cookiecount = 0;
 let greencount = 0;
