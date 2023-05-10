@@ -20,15 +20,14 @@ const clientLogin = require('./client/clientLogin.js');
 const clientMessage = require('./client/clientMessage.js');
 const clientDisconnect = require('./client/clientDisconnect.js');
 const sortUsersByPoints = require('./datamanagement/getLeaderboard.js')
-const fooddelete = require('./fooddelete.js')
-
+const fooddelete = require('./food/foodDelete.js')
 // Generate Food
-require('./foodManagement.js');
+require('./food/foodManagement.js');
 
 let intervalID;
 
 io.on('connection', (socket) => {
-//joe on a boat is very cool
+
     // Handle Client Connections
     clientConnect(socket);
 
@@ -54,7 +53,7 @@ io.on('connection', (socket) => {
   socket.on('foodarray', (message) => {
         console.log(socket.id, message)
     });
-    
+
     // Handle Client Disconnections
     socket.on('disconnect', () => {
         clientDisconnect(socket, io);
@@ -78,5 +77,4 @@ server.listen(PORT, () => {
 
 });
 
-// Sort user data by points
 sortUsersByPoints();

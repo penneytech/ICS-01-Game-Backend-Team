@@ -1,6 +1,6 @@
-const globals = require("./globals.js");
+sconst globals = require("../globals.js");
 const foodManagement = require("./foodManagement.js");
-const scoreUpdate = require('./scoreUpdate.js');
+const scoreUpdate = require('../score/scoreUpdate.js');
 
 function foodResetLocation(max_width, max_height) {
     food_x = Math.floor(Math.random() * max_width);
