@@ -1,4 +1,4 @@
-sconst globals = require("../globals.js");
+const globals = require("../globals.js");
 const foodManagement = require("./foodManagement.js");
 const scoreUpdate = require('../score/scoreUpdate.js');
 
