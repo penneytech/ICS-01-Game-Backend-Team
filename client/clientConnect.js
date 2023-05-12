@@ -13,6 +13,8 @@ function clientConnect(socket, io) {
     console.log("");
     console.log('A user connected.');
 
+    let connectedclients = globals.getGlobal('connectedclients');
+    
     // Send the client a random start position and 
     // set it in connectedclients
     const randomposition = randomPosition(socket);
@@ -25,31 +27,31 @@ function clientConnect(socket, io) {
     socket.emit('leaderboarddata', leaderboarddata);
 
 
-// Add the id of the connected client to the array along with any other relevant client information
-connectedclients.push({
-    id: socket.id,
-    username: "",
-    xpos: randomposition.x,
-    ypos: randomposition.y,
-    currentscore: 0,
-    type: "",
-    // Any other client information here
-});
+    // Add the id of the connected client to the array along with any other relevant client information
+    connectedclients.push({
+        id: socket.id,
+        username: "",
+        xpos: randomposition.x,
+        ypos: randomposition.y,
+        currentscore: 0,
+        type: "",
+        // Any other client information here
+    });
 
 
-// Log the list of connected clients to the console
-console.log('Connected clients:', connectedclients);
+    // Log the list of connected clients to the console
+    console.log('Connected clients:', connectedclients);
 
-      // Emit ingame scoreboard
+    // Emit ingame scoreboard
     let ingamescore = inGameLeaderboard(connectedclients);
     io.emit('ingameleaderboard', ingamescore);
 
-  
-// Update the global variable with the updated array
-globals.setGlobal('connectedclients', connectedclients);
+
+    // Update the global variable with the updated array
+    globals.setGlobal('connectedclients', connectedclients);
 
     // Test initPlayerPositions
-require('../multiplayer/initPlayerPositions.js')
+    require('../multiplayer/initPlayerPositions.js')
 
 }
 

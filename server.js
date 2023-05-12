@@ -23,6 +23,7 @@ const clientDisconnect = require('./client/clientDisconnect.js');
 const sortUsersByPoints = require('./datamanagement/getLeaderboard.js');
 const startGame = require('./multiplayer/timer.js');
 const fooddelete = require('./food/foodDelete.js');
+const updatePosition = require('./multiplayer/updatePosition.js')
 // Generate Food
 require('./food/foodManagement.js');
 
@@ -63,6 +64,7 @@ io.on('connection', (socket) => {
   
     socket.on('updateclientposition', (message) => {
         // Expect {"username:" //, "x": //, "y": //}
+        console.log('[updateclientposition]:', message)
         updatePosition(message, socket, io);
     });
 
