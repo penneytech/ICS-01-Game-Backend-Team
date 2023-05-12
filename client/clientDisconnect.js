@@ -23,7 +23,7 @@ function clientDisconnect(socket, io) {
   }
 
   // Log the updated list of connected clients to the console
-  console.log('[clientDisconnect]: Connected clients:', connectedclients);
+  //console.log('[clientDisconnect]: Connected clients:', connectedclients);
 
   // Update the global variable with the updated array
   globals.setGlobal('connectedclients', connectedclients);
