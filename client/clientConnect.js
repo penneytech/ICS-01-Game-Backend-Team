@@ -7,17 +7,18 @@ const globals = require('../globals.js');
 const randomPosition = require("../multiplayer/randomPosition.js");
 const sortUsersByPoints = require('../datamanagement/getLeaderboard.js');
 const inGameLeaderboard = require('../score/inGameLeaderboard.js');
+const initPlayerPositions = require('../multiplayer/initPlayerPositions.js')
 
 // Define a function to handle a client connection
 function clientConnect(socket, io) {
     console.log("");
-    console.log('A user connected.');
+    console.log('[clientConnect]: A user connected.');
 
     let connectedclients = globals.getGlobal('connectedclients');
     
     // Send the client a random start position and 
-    // set it in connectedclients
     const randomposition = randomPosition(socket);
+    socket.emit("initposition", randomposition);
 
     // Send Food To Client
     socket.emit("foodinit", globals.getGlobal("foodArray"));
@@ -31,9 +32,9 @@ function clientConnect(socket, io) {
     // Add the id of the connected client to the array along with any other relevant client information
     connectedclients.push({
         id: socket.id,
-        username: "",
-        xpos: randomposition.x,
-        ypos: randomposition.y,
+        username: "default",
+        x: randomposition.x,
+        y: randomposition.y,
         currentscore: 0,
         type: "",
         // Any other client information here
@@ -51,9 +52,8 @@ function clientConnect(socket, io) {
     // Update the global variable with the updated array
     globals.setGlobal('connectedclients', connectedclients);
 
-    // Test initPlayerPositions
-    require('../multiplayer/initPlayerPositions.js')
-
+    // Send initial player positions to the client
+    initPlayerPositions(socket);
 }
 
 // Export the function for other modules to use

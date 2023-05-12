@@ -60,11 +60,11 @@ socket.on("update", (data) => {
         tableRow.appendChild(usernameCell);
 
         const xCell = document.createElement("td"); // New cell for X
-        xCell.textContent = clientID.xpos; // Assuming the client data contains the value for X
+        xCell.textContent = clientID.x; // Assuming the client data contains the value for X
         tableRow.appendChild(xCell);
 
         const yCell = document.createElement("td"); // New cell for Y
-        yCell.textContent = clientID.ypos; // Assuming the client data contains the value for Y
+        yCell.textContent = clientID.y; // Assuming the client data contains the value for Y
         tableRow.appendChild(yCell);
 
         const scoreCell = document.createElement("td"); // New cell for score

@@ -1,9 +1,7 @@
 // Emit all player positions to the frontend on client join 
 const globals = require("../globals.js");
 
-initPlayerPositions();
-
-function initPlayerPositions() {
+function initPlayerPositions(socket) {
     console.log("INITPLAYERPOSTION RAN")
     let connectedclients = globals.getGlobal('connectedclients');
 
@@ -19,7 +17,7 @@ console.log("CHECKING ELEMENT", element)
         
     });
 
-   // socket.emit('initopponents', opponents)
+    socket.emit('initopponents', opponents)
 }
 
 module.exports = initPlayerPositions;

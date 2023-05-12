@@ -12,8 +12,8 @@ function updatePosition(message, socket, io) {
   )
 
   if (index != -1) {
-    connectedclients[index].xpos = message.x;
-    connectedclients[index].ypos = message.y;
+    connectedclients[index].x = message.x;
+    connectedclients[index].y = message.y;
   }
 
   globals.setGlobal('connectedclients', connectedclients);
