@@ -31,7 +31,7 @@ let intervalID;
 io.on('connection', (socket) => {
 
     // Handle Client Connections
-    clientConnect(socket);
+    clientConnect(socket, io);
 
     // Handle Client Messages
     socket.on('ident', (message) => {
