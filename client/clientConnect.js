@@ -4,34 +4,46 @@ This code defines a function that handles a client connection to the server. Whe
 
 // Import the required functions from the 'globals.js' module
 const globals = require('../globals.js');
+const sortUsersByPoints = require('../datamanagement/getLeaderboard.js');
+const inGameLeaderboard = require('../score/inGameLeaderboard.js');
 
 // Define a function to handle a client connection
-function clientConnect(socket) {
+function clientConnect(socket, io) {
     console.log("");
     console.log('A user connected.');
 
     // Send Food To Client
     socket.emit("foodinit", globals.getGlobal("foodArray"));
 
+    // Send leaderboard data to Client
+    let leaderboarddata = sortUsersByPoints;
+    socket.emit('leaderboarddata', leaderboarddata);
 
-// Update list of connected clients
-let connectedclients = globals.getGlobal('connectedclients');
 
-// Add the id of the connected client to the array along with any other relevant client information
-connectedclients.push({
-    id: socket.id,
-    username: "",
-    xpos: 0,
-    ypos: 0,
-    currentscore: 0,
-    // Any other client information here
-});
+    // Update list of connected clients
+    let connectedclients = globals.getGlobal('connectedclients');
 
-// Log the list of connected clients to the console
-console.log('Connected clients:', connectedclients);
+    // Add the id of the connected client to the array along with any other relevant client information
+    connectedclients.push({
+        id: socket.id,
+        username: "",
+        xpos: 0,
+        ypos: 0,
+        currentscore: 0,
+        // Any other client information here
+    });
 
-// Update the global variable with the updated array
-globals.setGlobal('connectedclients', connectedclients);
+    // Log the list of connected clients to the console
+    //console.log('Connected clients:', connectedclients);
+
+    // Emit ingameleaderboard
+
+    // Emit ingame scoreboard
+    let ingamescore = inGameLeaderboard(connectedclients);
+    io.emit('ingameleaderboard', ingamescore);
+
+    // Update the global variable with the updated array
+    globals.setGlobal('connectedclients', connectedclients);
 }
 
 // Export the function for other modules to use

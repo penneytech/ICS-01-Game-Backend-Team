@@ -25,8 +25,7 @@ function clientLogin(data, socket, io) {
     socket.emit('loginSucceed');
 
     // Import food array global here
-
-    socket.emit(globals.getGlobal("foodArray", foodArray));
+    socket.emit(globals.getGlobal("foodArray"));
 
     // Get food array global
     // Send food array to the client using 'socket.emit("foodsync", foodArray)';
@@ -42,7 +41,7 @@ function clientLogin(data, socket, io) {
     }
 
     // Emit the 'update' event to the 'frontendmonitor' room with the current list of user IDs
-    console.log("[clientLogin]: Sending user ID's:", connectedclients);
+    //console.log("[clientLogin]: Sending user ID's:", connectedclients);
     io.to('frontendmonitor').emit('update', connectedclients);
 
   } else {
