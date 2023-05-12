@@ -6,12 +6,13 @@ globals = require("../globals.js");
 function startGame() {
   console.log('Game started.');
 
-    const clock = setInterval(() => {
-        timerLeft = timerLeft - 1000;
-globals.setGlobal('timerLeft', timerLeft);                console.log("Second", globals.getGlobal("timerLeft"));
+  const clock = setInterval(() => {
+    timerLeft = timerLeft - 1000;
+    globals.setGlobal('timerLeft', timerLeft); 
+    //console.log("Second", globals.getGlobal("timerLeft"));
 
-    }, 1000);
-  
+  }, 1000);
+
   // Set a timer to stop the game after 5 minutes
   const timer = setTimeout(() => {
     console.log('Game stopped.');
@@ -21,7 +22,7 @@ globals.setGlobal('timerLeft', timerLeft);                console.log("Second", 
       console.log('Game restarting.');
       startGame();
       clearInterval(interval);
-        clearInterval(clock);
+      clearInterval(clock);
     }, RESTART_INTERVAL);
   }, GAME_DURATION);
 }
