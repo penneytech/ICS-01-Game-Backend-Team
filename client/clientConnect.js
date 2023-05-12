@@ -4,11 +4,16 @@ This code defines a function that handles a client connection to the server. Whe
 
 // Import the required functions from the 'globals.js' module
 const globals = require('../globals.js');
+const randomPosition = require("../multiplayer/randomPosition.js");
 
 // Define a function to handle a client connection
 function clientConnect(socket) {
     console.log("");
     console.log('A user connected.');
+
+    // Send the client a random start position and 
+    // set it in connectedclients
+    const randomposition = randomPosition(socket);
 
     // Send Food To Client
     socket.emit("foodinit", globals.getGlobal("foodArray"));
@@ -21,17 +26,22 @@ let connectedclients = globals.getGlobal('connectedclients');
 connectedclients.push({
     id: socket.id,
     username: "",
-    xpos: 0,
-    ypos: 0,
+    xpos: randomposition.x,
+    ypos: randomposition.y,
     currentscore: 0,
+    type: "",
     // Any other client information here
 });
+
 
 // Log the list of connected clients to the console
 console.log('Connected clients:', connectedclients);
 
 // Update the global variable with the updated array
 globals.setGlobal('connectedclients', connectedclients);
+
+    // Test initPlayerPositions
+require('../multiplayer/initPlayerPositions.js')
 }
 
 // Export the function for other modules to use

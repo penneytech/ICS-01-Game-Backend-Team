@@ -2,7 +2,8 @@
 const globals = {
     connectedclients: [], // A string list of all clients connected
     clients: [], // Array of all websocket clients
-    foodArray: []
+    foodArray: [],
+    timerLeft: [],
 };
 
 // Define a function to set a global variable
