@@ -29,7 +29,7 @@ function clientDisconnect(socket, io) {
   globals.setGlobal('connectedclients', connectedclients);
 
   // Emit the 'update' event to the 'frontendmonitor' room with the current list of user IDs
-  console.log("[clientIdentify]: Sending user ID's:", connectedclients);
+  //console.log("[clientIdentify]: Sending user ID's:", connectedclients);
   io.to('frontendmonitor').emit('update', connectedclients);
 }
 

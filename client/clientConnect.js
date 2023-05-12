@@ -23,7 +23,8 @@ function clientConnect(socket, io) {
     socket.emit("foodinit", globals.getGlobal("foodArray"));
 
     // Send leaderboard data to Client
-    let leaderboarddata = sortUsersByPoints;
+    let leaderboarddata = sortUsersByPoints();
+
     socket.emit('leaderboarddata', leaderboarddata);
 
 
@@ -40,7 +41,7 @@ function clientConnect(socket, io) {
 
 
     // Log the list of connected clients to the console
-    console.log('Connected clients:', connectedclients);
+    //console.log('Connected clients:', connectedclients);
 
     // Emit ingame scoreboard
     let ingamescore = inGameLeaderboard(connectedclients);

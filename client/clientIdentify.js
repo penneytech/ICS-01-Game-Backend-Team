@@ -8,7 +8,7 @@ const globals = require("../globals.js");
 // Define a function to handle a client identification
 function clientIdentify(data, socket, io) {
     console.log("");
-    console.log("[clientIdentify]: Ident", data);
+    console.log("[clientIdentify]: Ident", data, socket.id);
 
     // Add client either to frontend or users
     if (data == "frontendmonitor") {

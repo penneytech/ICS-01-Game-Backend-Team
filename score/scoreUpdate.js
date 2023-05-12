@@ -25,6 +25,8 @@ function scoreUpdate(value, socket, io) {
 
             // Emit ingame scoreboard
             let ingamescore = inGameLeaderboard(connectedclients);
+            console.log(`[scoreUpdate]: ingame leaderboard`, ingamescore);
+
             io.emit('ingameleaderboard', ingamescore);
 
             // Emit the individual player score
@@ -38,7 +40,7 @@ function scoreUpdate(value, socket, io) {
 
         } // End up updating score
     } catch (e) {
-        console.log(`[scoreUpdate]: error`, index, connectedclients[index].currentscore);
+        console.log(`[scoreUpdate]: error`, index, connectedclients[index].currentscore, error);
     }
 }
 

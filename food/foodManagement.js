@@ -71,14 +71,14 @@ function generateAllFood(num_total_food) {
   for (i = 0; i < num_total_food; i++) {
     foodGenerator(display_width, display_height);
   }
-  console.log("Food array", foodArray);
+  //console.log("Food array", foodArray);
 
   // Set the foodArray global here
   
   globals.setGlobal("foodArray", foodArray);
 }
 
-generateAllFood(100);
+generateAllFood(1000);
 
 console.log("Cookies:", cookiecount);
 console.log("CanGreens:", greencount);

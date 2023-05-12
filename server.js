@@ -3,7 +3,6 @@ const express = require('express');
 const cors = require('cors');
 const app = express();
 const server = require('http').createServer(app);
-// const updatePos = require("./multiplayer/updatePosition.js");
 const io = require('socket.io')(server, {
     cors: {
         origin: '*', // You can restrict this to specific domains if needed.
@@ -21,7 +20,7 @@ const clientLogin = require('./client/clientLogin.js');
 const clientMessage = require('./client/clientMessage.js');
 const clientDisconnect = require('./client/clientDisconnect.js');
 const sortUsersByPoints = require('./datamanagement/getLeaderboard.js');
-const startGame = require('./multiplayer/timer.js');
+//const startGame = require('./multiplayer/timer.js');
 const fooddelete = require('./food/foodDelete.js');
 const updatePosition = require('./multiplayer/updatePosition.js')
 // Generate Food
@@ -64,7 +63,6 @@ io.on('connection', (socket) => {
   
     socket.on('updateclientposition', (message) => {
         // Expect {"username:" //, "x": //, "y": //}
-        console.log('[updateclientposition]:', message)
         updatePosition(message, socket, io);
     });
 
