@@ -12,10 +12,10 @@ function initPlayerPositions(socket) {
 console.log("CHECKING ELEMENT", element)
         if(element.username != ''){
       opponents.push(element)
-        console.log(opponents);
     }
         
     });
+    console.log("[initPlayerPositions]:", opponents);
 
     socket.emit('initopponents', opponents)
 }
