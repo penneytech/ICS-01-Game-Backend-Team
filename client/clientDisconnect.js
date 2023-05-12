@@ -4,12 +4,16 @@ This code defines a function that handles a client disconnection from the server
 
 // Import the required functions from the 'globals.js' module
 const globals = require('../globals.js');
+const inGameLeaderboard = require('../score/inGameLeaderboard.js');
+const removePlayer = require('../multiplayer/removePlayer.js')
 
 // Define a function to handle a client disconnection
 function clientDisconnect(socket, io) {
   console.log("");
   console.log('[clientDisconnect]: A user disconnected.');
 
+  // Send a signal to the clients to remove the player
+  removePlayer(socket, io);
   // Update list of connected clients
   let connectedclients = globals.getGlobal('connectedclients');
 

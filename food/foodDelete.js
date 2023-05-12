@@ -21,14 +21,14 @@ function fooddelete(message, socket, io) {
         scoreUpdate(foodArray[message].Value, socket, io);
 
         // print foodarray at the message number 
-        console.log('[fooddelete]: delete food:', foodArray[message]);
-        console.log('[fooddelete]: Food before', foodArray[message]);
+        //console.log('[fooddelete]: delete food:', foodArray[message]);
+        //console.log('[fooddelete]: Food before', foodArray[message]);
 
         // change the X / Y of the food array object to a random value
         let newFood = foodResetLocation(6000, 6000); // 6000, 6000 
         foodArray[message].x = newFood.x;
         foodArray[message].y = newFood.y;
-        console.log('[fooddelete]: Food after', foodArray[message]);
+        //console.log('[fooddelete]: Food after', foodArray[message]);
 
         // Update the food array global
         globals.setGlobal("foodArray", foodArray);

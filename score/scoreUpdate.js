@@ -33,7 +33,7 @@ function scoreUpdate(value, socket, io) {
             socket.emit('playerscoreupdate', connectedclients[index].currentscore);
 
             // Console log conencted clients
-            console.log(`[scoreUpdate]: connected clients:`, connectedclients);
+            //console.log(`[scoreUpdate]: connected clients:`, connectedclients);
 
             // Update the front end 
             io.to('frontendmonitor').emit('update', connectedclients);

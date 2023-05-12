@@ -32,7 +32,7 @@ function clientConnect(socket, io) {
     // Add the id of the connected client to the array along with any other relevant client information
     connectedclients.push({
         id: socket.id,
-        username: "default",
+        username: "",
         x: randomposition.x,
         y: randomposition.y,
         currentscore: 0,

@@ -17,9 +17,6 @@ function updatePosition(message, socket, io) {
   }
 
   globals.setGlobal('connectedclients', connectedclients);
-
-  // Emit the new position to all the clients for that user
-  // Format {"username:" //, "x": //, "y": //}
   
   try {
     io.emit('updateopponentposition', { "username": message.username, "x": message.x, "y": message.y });
