@@ -10,14 +10,14 @@ function scoreUpdate(value, socket, io) {
 
     // Find the connected client object that has the socket.id
     let index = connectedclients.indexOf(connectedclients.find(client => socket.id == client.id));
-    console.log(`[scoreUpdate]: index number`, index);
+    //console.log(`[scoreUpdate]: index number`, index);
 
     try {
 
         if (index != -1) {
             // Update the currentscore for that object to include the value
             connectedclients[index].currentscore = connectedclients[index].currentscore + value;
-            console.log(
+            //console.log(
                 `[scoreUpdate]: updated score for`,
                 connectedclients[index].username,
                 connectedclients[index].currentscore,
@@ -25,7 +25,7 @@ function scoreUpdate(value, socket, io) {
 
             // Emit ingame scoreboard
             let ingamescore = inGameLeaderboard(connectedclients);
-            console.log(`[scoreUpdate]: ingame leaderboard`, ingamescore);
+            //console.log(`[scoreUpdate]: ingame leaderboard`, ingamescore);
 
             io.emit('ingameleaderboard', ingamescore);
 

@@ -15,13 +15,12 @@ function removePlayer(socket, io) {
     console.log('[clientDisconnect]: Socket ID found!', socket.id)
 
     if (connectedclients[index].username != '') {
-      writeScore(connectedclients[index].username, connectedclients[index].currentscore)
+      writeScore(connectedclients[index].username, connectedclients[index].currentscore);
+      connectedclients[index].currentscore = 0;
       io.emit('removeopponent', connectedclients[index].username)
       let ingamescore = inGameLeaderboard(connectedclients);
       io.emit('ingameleaderboard', ingamescore);
     }
-
-    connectedclients.splice(index, 1);
   }
 
 }

@@ -1,4 +1,4 @@
-  // Server Setup & Dependancies 
+// Server Setup & Dependancies 
 const express = require('express');
 const cors = require('cors');
 const app = express();
@@ -22,7 +22,8 @@ const clientDisconnect = require('./client/clientDisconnect.js');
 const sortUsersByPoints = require('./datamanagement/getLeaderboard.js');
 //const startGame = require('./multiplayer/timer.js');
 const fooddelete = require('./food/foodDelete.js');
-const updatePosition = require('./multiplayer/updatePosition.js')
+const updatePosition = require('./multiplayer/updatePosition.js');
+const getUserStats = require('./datamanagement/getUserStats.js')
 // Generate Food
 require('./food/foodManagement.js');
 
@@ -52,15 +53,20 @@ io.on('connection', (socket) => {
         fooddelete(message, socket, io)
     });
 
-  socket.on('foodarray', (message) => {
+    socket.on('foodarray', (message) => {
         console.log(socket.id, message)
     });
+
+    socket.on('userstats', (message) => {
+        socket.emit('userstatsdata', getUserStats(message))
+    });
+
 
     // Handle Client Disconnections
     socket.on('disconnect', () => {
         clientDisconnect(socket, io);
     });
-  
+
     socket.on('updateclientposition', (message) => {
         // Expect {"username:" //, "x": //, "y": //}
         updatePosition(message, socket, io);
@@ -75,7 +81,7 @@ io.on('connection', (socket) => {
                 'This is a test message from the server!');
         }, 10000);
     }
-        
+
 });
 
 server.listen(PORT, () => {
