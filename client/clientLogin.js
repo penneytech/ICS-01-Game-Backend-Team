@@ -27,10 +27,6 @@ function clientLogin(data, socket, io) {
     // Import food array global here
     socket.emit(globals.getGlobal("foodArray"));
 
-    // Get food array global
-    // Send food array to the client using 'socket.emit("foodsync", foodArray)';
-
-
     // Update the random connectedclient to include the user name of the logged in user
     let connectedclients = globals.getGlobal("connectedclients");
     const clientIndex = connectedclients.findIndex(client => client.id === socket.id);

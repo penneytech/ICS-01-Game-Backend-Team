@@ -4,6 +4,7 @@ This code defines a function that handles a client connection to the server. Whe
 
 // Import the required functions from the 'globals.js' module
 const globals = require('../globals.js');
+const randomPosition = require("../multiplayer/randomPosition.js");
 const sortUsersByPoints = require('../datamanagement/getLeaderboard.js');
 const inGameLeaderboard = require('../score/inGameLeaderboard.js');
 
@@ -11,6 +12,10 @@ const inGameLeaderboard = require('../score/inGameLeaderboard.js');
 function clientConnect(socket, io) {
     console.log("");
     console.log('A user connected.');
+
+    // Send the client a random start position and 
+    // set it in connectedclients
+    const randomposition = randomPosition(socket);
 
     // Send Food To Client
     socket.emit("foodinit", globals.getGlobal("foodArray"));
@@ -20,30 +25,32 @@ function clientConnect(socket, io) {
     socket.emit('leaderboarddata', leaderboarddata);
 
 
-    // Update list of connected clients
-    let connectedclients = globals.getGlobal('connectedclients');
+// Add the id of the connected client to the array along with any other relevant client information
+connectedclients.push({
+    id: socket.id,
+    username: "",
+    xpos: randomposition.x,
+    ypos: randomposition.y,
+    currentscore: 0,
+    type: "",
+    // Any other client information here
+});
 
-    // Add the id of the connected client to the array along with any other relevant client information
-    connectedclients.push({
-        id: socket.id,
-        username: "",
-        xpos: 0,
-        ypos: 0,
-        currentscore: 0,
-        // Any other client information here
-    });
 
-    // Log the list of connected clients to the console
-    //console.log('Connected clients:', connectedclients);
+// Log the list of connected clients to the console
+console.log('Connected clients:', connectedclients);
 
-    // Emit ingameleaderboard
-
-    // Emit ingame scoreboard
+      // Emit ingame scoreboard
     let ingamescore = inGameLeaderboard(connectedclients);
     io.emit('ingameleaderboard', ingamescore);
 
-    // Update the global variable with the updated array
-    globals.setGlobal('connectedclients', connectedclients);
+  
+// Update the global variable with the updated array
+globals.setGlobal('connectedclients', connectedclients);
+
+    // Test initPlayerPositions
+require('../multiplayer/initPlayerPositions.js')
+
 }
 
 // Export the function for other modules to use
