@@ -2,6 +2,7 @@ const fs = require('fs');
 const globals = require('../globals.js')
 
 function updateCharacters(character, socket) {
+    
     console.log('[updateCharacters]:', character, socket.id)
     fs.readFile('credentials.json', 'utf8', (err, data) => {
         if (err) {
@@ -25,7 +26,6 @@ function updateCharacters(character, socket) {
         let foundUser = false;
 
         credentials.forEach((user) => {
-            //console.log("searching", user.username, connectedclients[index])
             if (user.username == connectedclients[index].username) {
                 user.type = character;
                 foundUser = true;

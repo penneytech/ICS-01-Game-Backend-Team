@@ -78,7 +78,7 @@ function generateAllFood(num_total_food) {
   globals.setGlobal("foodArray", foodArray);
 }
 
-generateAllFood(1000);
+generateAllFood(200);
 
 console.log("Cookies:", cookiecount);
 console.log("CanGreens:", greencount);

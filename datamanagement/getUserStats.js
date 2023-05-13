@@ -1,6 +1,7 @@
 const fs = require('fs');
 
 function getUserStats(inputusername) {
+  
     console.log('[getUserStats]:', inputusername)
 
   try {

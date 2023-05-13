@@ -19,7 +19,7 @@ function updatePosition(message, socket, io) {
   globals.setGlobal('connectedclients', connectedclients);
   
   try {
-    io.emit('updateopponentposition', { "username": message.username, "x": message.x, "y": message.y });
+    io.emit('updateopponentposition', { "username": message.username, "x": message.x, "y": message.y, "type": connectedclients[index].type });
   } catch (error) {
     console.log(error);
   }

@@ -33,9 +33,18 @@ function clientLogin(data, socket, io) {
     console.log("[clientLogin]: Client index:", clientIndex);
     if (clientIndex !== -1) {
       console.log("[clientLogin]: Setting name:", socket.id + " - " + data.username);
-      connectedclients[clientIndex].username = data.username;
-      connectedclients[clientIndex].type = data.type;
+      connectedclients[clientIndex].username = match.username;
+      connectedclients[clientIndex].type = match.type;
+    
     }
+
+    // Emit the newly logged in user to the frontend
+    io.emit('initopponents', [{
+      "username": connectedclients[clientIndex].username ,
+      "x": connectedclients[clientIndex].x,
+      "y": connectedclients[clientIndex].y,
+      "type": connectedclients[clientIndex].type,
+    }]);
 
     // Emit the 'update' event to the 'frontendmonitor' room with the current list of user IDs
     //console.log("[clientLogin]: Sending user ID's:", connectedclients);
