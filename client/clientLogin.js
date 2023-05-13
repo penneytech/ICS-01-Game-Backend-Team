@@ -34,6 +34,7 @@ function clientLogin(data, socket, io) {
     if (clientIndex !== -1) {
       console.log("[clientLogin]: Setting name:", socket.id + " - " + data.username);
       connectedclients[clientIndex].username = data.username;
+      connectedclients[clientIndex].type = data.type;
     }
 
     // Emit the 'update' event to the 'frontendmonitor' room with the current list of user IDs

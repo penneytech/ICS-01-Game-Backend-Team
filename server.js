@@ -24,6 +24,7 @@ const sortUsersByPoints = require('./datamanagement/getLeaderboard.js');
 const fooddelete = require('./food/foodDelete.js');
 const updatePosition = require('./multiplayer/updatePosition.js');
 const getUserStats = require('./datamanagement/getUserStats.js')
+const updateCharacters = require('./multiplayer/updateCharacter.js')
 // Generate Food
 require('./food/foodManagement.js');
 
@@ -61,6 +62,10 @@ io.on('connection', (socket) => {
         socket.emit('userstatsdata', getUserStats(message))
     });
 
+    socket.on('updatecharacter', (message) => {
+        console.log('updatecharacter', message);
+        updateCharacters(message, socket)
+    });
 
     // Handle Client Disconnections
     socket.on('disconnect', () => {
