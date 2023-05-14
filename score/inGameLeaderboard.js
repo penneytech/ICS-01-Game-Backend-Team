@@ -1,6 +1,6 @@
 function inGameLeaderboard(players) {
     // filter out players without a username
-    let filteredPlayers = players.filter(player => player.username !== '');
+    let filteredPlayers = players.filter(player => player.username !== '' && player.username !== 'frontendmonitor');
 
     // create a new array containing usernames and scores
     let playerScores = filteredPlayers.map(player => ({ username: player.username, score: player.currentscore }));

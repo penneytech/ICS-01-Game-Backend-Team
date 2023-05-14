@@ -17,11 +17,6 @@ function scoreUpdate(value, socket, io) {
         if (index != -1) {
             // Update the currentscore for that object to include the value
             connectedclients[index].currentscore = connectedclients[index].currentscore + value;
-            //console.log(
-            //     `[scoreUpdate]: updated score for`,
-            //     connectedclients[index].username,
-            //     connectedclients[index].currentscore,
-            // );
 
             // Emit ingame scoreboard
             let ingamescore = inGameLeaderboard(connectedclients);

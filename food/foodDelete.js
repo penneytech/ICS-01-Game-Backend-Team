@@ -9,7 +9,7 @@ function foodResetLocation(max_width, max_height) {
 }
 
 function fooddelete(message, socket, io) {
-    console.log('[fooddelete]: Food delete called...');
+    // console.log('[fooddelete]: Food delete called...');
 
     try {
 
@@ -19,10 +19,6 @@ function fooddelete(message, socket, io) {
 
         // Update the user score
         scoreUpdate(foodArray[message].Value, socket, io);
-
-        // print foodarray at the message number 
-        //console.log('[fooddelete]: delete food:', foodArray[message]);
-        //console.log('[fooddelete]: Food before', foodArray[message]);
 
         // change the X / Y of the food array object to a random value
         let newFood = foodResetLocation(6000, 6000); // 6000, 6000 
