@@ -30,7 +30,7 @@ function fooddelete(message, socket, io) {
         globals.setGlobal("foodArray", foodArray);
 
         // Send the new X / Y to all clients 
-        socket.emit('foodupdate', {
+        io.emit('foodupdate', {
             "foodnumber": message,
             "x": newFood.x,
             "y": newFood.y
