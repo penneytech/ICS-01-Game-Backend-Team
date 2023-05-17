@@ -25,6 +25,7 @@ const fooddelete = require('./food/foodDelete.js');
 const updatePosition = require('./multiplayer/updatePosition.js');
 const getUserStats = require('./datamanagement/getUserStats.js')
 const updateCharacters = require('./multiplayer/updateCharacter.js')
+const eatPlayer = require('./multiplayer/playerHit.js')
 
 // Generate Food
 require('./food/foodManagement.js');
@@ -52,6 +53,10 @@ io.on('connection', (socket) => {
 
     socket.on('foodcollision', (message) => {
         fooddelete(message, socket, io)
+    });
+
+    socket.on('playercollision', (message) => {
+        eatPlayer(message, socket, io)
     });
 
     socket.on('userstats', (message) => {
