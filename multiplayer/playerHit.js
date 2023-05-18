@@ -1,78 +1,83 @@
 const globals = require('../globals.js');
 
-
 // Map to store hit reports from users
 const hitReports = new Map();
 
 function eatPlayer(message, socket, io) {
-    // Message - {"user": myusername, "hit": userhit}
+    try {
+        // Message - {"user": myusername, "hit": userhit}
+        console.log('PlayerHit.js', message);
 
-    console.log('PlayerHit.js', message);
+        const { user, hit } = message;
 
-    const { user, hit } = message;
+        // Store the hit report in the map
+        hitReports.set(user, hit);
 
-    // Store the hit report in the map
-    hitReports.set(user, hit);
+        // Check if both users have hit each other, and take an action
+        if (hitReports.has(user) && hitReports.get(user) === hit) {
+            console.log(`${user} hit ${hit}`);
 
-    // Check if both users have hit each other, and take an action
+            // Register the hit logic here
+            // Compare the two player scores
+            let connectedclients = globals.getGlobal('connectedclients');
+            console.log("message.user", message.user, "message.hit", message.hit);
+            // Find each player in the connectedclients array.
+            let player1index = connectedclients.indexOf(
+                connectedclients.find((client) => client.username == message.user)
+            );
+            let player2index = connectedclients.indexOf(
+                connectedclients.find((client) => client.username == message.hit)
+            );
+            console.log("PlayerHit Indexes", player1index, player2index);
 
-    if (hitReports.has(user) && hitReports.get(user) === hit) {
+            let player1score = connectedclients[player1index].currentscore;
+            let player2score = connectedclients[player2index].currentscore;
 
-        console.log(`${user} hit ${hit}`);
+            console.log("PlayerHit Scores", player1score, player2score);
 
-        // Register the hit logic here
-        // Compare the two player scores
-        let connectedclients = globals.getGlobal('connectedclients');
-        console.log("message.user", message.user, "message.hit", message.hit);
-        // Find each player in the connectedclients array.
-        let player1index = connectedclients.indexOf(connectedclients.find(client => client.username == message.user));
-        let player2index = connectedclients.indexOf(connectedclients.find(client => client.username == message.hit));
-        console.log("PlayerHit Indexes", player1index, player2index);
+            if (player1score > player2score) {
+                // Give the points to the highest scoring player
+                connectedclients[player1index].currentscore =
+                    player1score + player2score;
 
-        let player1score = connectedclients[player1index].currentscore;
-        let player2score = connectedclients[player2index].currentscore;
+                // Respawn the player that lost
+                let randomx = Math.floor(Math.random() * 6000);
+                let randomy = Math.floor(Math.random() * 6000);
 
-        console.log("PlayerHit Scores", player1score, player2score);
+                // Send the position to the player
+                socket.emit("initposition", { "x": randomx, "y": randomy });
 
-        if (player1score > player2score) {
-            // Give the points to the highest scoring player
-            connectedclients[player1score].currentscore = player1score + player2score;
+                connectedclients[player2index].x = randomx;
+                connectedclients[player2index].y = randomy;
 
-            // Respawn the player that lost
-            let randomx = Math.floor(Math.random() * 6000); 
-            let randomy = Math.floor(Math.random() * 6000); 
+                // Set the losing player's score to zero
+                connectedclients[player2index].currentscore = 0;
+            } else if (player1score < player2score) {
+                connectedclients[player2index].currentscore =
+                    player1score + player2score;
 
-            // Send the position to the player
-            socket.emit("initposition",  {"x":randomx, "y":randomy});
-                
-            connectedclients[player2index].x = randomx;
-            connectedclients[player2index].y = randomy;
-            
-            // Set the losing player's score to zero 
-            connectedclients[player2index].currentscore = 0;
+                let randomx = Math.floor(Math.random() * 6000);
+                let randomy = Math.floor(Math.random() * 6000);
 
-        } else if (player1score < player2score) {
-            connectedclients[player2score].currentscore = player1score + player2score;
+                // Send the position to the player
+                socket.emit("initposition", { "x": randomx, "y": randomy });
 
-            let randomx = Math.floor(Math.random() * 6000); 
-            let randomy = Math.floor(Math.random() * 6000); 
+                connectedclients[player1index].x = randomx;
+                connectedclients[player1index].y = randomy;
 
-            // Send the position to the player
-            socket.emit("initposition",  {"x":randomx, "y":randomy});
-                
-            connectedclients[player1index].x = randomx;
-            connectedclients[player1index].y = randomy;
-            
-            // Set the losing player's score to zero 
-            connectedclients[player1index].currentscore = 0;
-            
+                // Set the losing player's score to zero
+                connectedclients[player1index].currentscore = 0;
+            }
+
+            // Once the hit is registered, remove the hit reports from the map
+            hitReports.delete(user);
+            hitReports.delete(hit);
         }
-
-        // Once the hit is registered, remove the hit reports from the map
-        hitReports.delete(user);
-        hitReports.delete(hit);
+    } catch (error) {
+        // Handle the error gracefully
+        console.error("An error occurred in eatPlayer:", error);
+        // You can perform any necessary error handling here, such as logging the error or sending a response to the client.
     }
 }
 
 module.exports = eatPlayer;
-
