@@ -34,22 +34,22 @@ function foodGenerator(max_width, max_height) {
   if (food_type > 9 && food_type <=17){
     food_type = "CanGreen";
     greencount++;
-    food_value = 20;
+    food_value = 30;
   }
   if (food_type > 17 && food_type <=22){
     food_type = "CanRed";
     canredcount++;
-    food_value = 30;
+    food_value = 50;
   }
   if (food_type >22 && food_type <=26){
     food_type = "Canmacblue";
     macbluecount++;
-    food_value = 50;
+    food_value = 70;
   }
   if (food_type >26 && food_type <=29){
     food_type = "CanMacRed";
     macredcount++;
-    food_value = 60;
+    food_value = 80;
   }
   if (food_type >29 && food_type <=31){
     food_type = "CanRainbow";
@@ -59,7 +59,7 @@ function foodGenerator(max_width, max_height) {
   if (food_type == 32){
     food_type = "Lollypop";
     lollycount++;
-    food_value = 200;
+    food_value = 300;
   }
 
   foodArray.push({ "x": food_x, "y": food_y, "Type": food_type, "Value": food_value});
