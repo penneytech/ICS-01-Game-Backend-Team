@@ -1,9 +1,11 @@
 // Define an object to hold the global variables
 const globals = {
     connectedclients: [], // A string list of all clients connected
+    io: [],
     clients: [], // Array of all websocket clients
     foodArray: [],
     timerLeft: [],
+    betweenRounds: [],
 };
 
 // Define a function to set a global variable
