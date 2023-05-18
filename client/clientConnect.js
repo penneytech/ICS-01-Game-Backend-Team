@@ -14,8 +14,19 @@ function clientConnect(socket, io) {
     console.log("");
     console.log('[clientConnect]: A user connected.');
 
+    // Set the IO global
+    globals.setGlobal('io', io);
+
     let connectedclients = globals.getGlobal('connectedclients');
-    
+
+    // Send the time remaining in the round
+    const timerLeft = globals.getGlobal('timerLeft')
+    socket.emit("timerleft", timerLeft);
+
+        // Send the round state
+    const betweenRounds = globals.getGlobal('betweenRounds')
+    socket.emit("betweenrounds", betweenRounds);
+
     // Send the client a random start position and 
     const randomposition = randomPosition(socket);
     socket.emit("initposition", randomposition);
@@ -25,7 +36,6 @@ function clientConnect(socket, io) {
 
     // Send leaderboard data to Client
     let leaderboarddata = sortUsersByPoints();
-
     socket.emit('leaderboarddata', leaderboarddata);
 
 

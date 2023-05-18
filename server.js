@@ -20,7 +20,7 @@ const clientLogin = require('./client/clientLogin.js');
 const clientMessage = require('./client/clientMessage.js');
 const clientDisconnect = require('./client/clientDisconnect.js');
 const sortUsersByPoints = require('./datamanagement/getLeaderboard.js');
-//const startGame = require('./multiplayer/timer.js');
+const startGame = require('./multiplayer/timer.js');
 const fooddelete = require('./food/foodDelete.js');
 const updatePosition = require('./multiplayer/updatePosition.js');
 const getUserStats = require('./datamanagement/getUserStats.js')
@@ -68,6 +68,11 @@ io.on('connection', (socket) => {
         updateCharacters(message, socket)
     });
 
+    // socket.on('gameTimer', (message) => {
+    //     console.log('gameTimer', message);
+    //     startGame(message, socket)
+    // });
+
     // Handle Client Disconnections
     socket.on('disconnect', () => {
         clientDisconnect(socket, io);
@@ -96,4 +101,3 @@ server.listen(PORT, () => {
 });
 
 sortUsersByPoints();
-//startGame();

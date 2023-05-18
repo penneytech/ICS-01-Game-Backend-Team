@@ -12,6 +12,9 @@ function clientDisconnect(socket, io) {
   console.log("");
   console.log('[clientDisconnect]: A user disconnected.');
 
+      // Set the IO global
+    globals.setGlobal('io', io);
+
   // Send a signal to the clients to remove the player
   removePlayer(socket, io);
   // Update list of connected clients
