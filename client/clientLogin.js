@@ -10,6 +10,8 @@ let clientFailCounter = 0;
 
 // Define a function to handle a client login attempt
 function clientLogin(data, socket, io) {
+  let alreadyloggedin = false;
+
   console.log("");
 
   // Check if provided username and password match any of the default credentials
@@ -18,8 +20,19 @@ function clientLogin(data, socket, io) {
     cred.password === data.password
   );
 
-  // If a match is found
-  if (match) {
+  // Check to see if user already logged in
+  let connectedclients = globals.getGlobal('connectedclients');
+
+  connectedclients.forEach((client) => {
+    if (client.username == data.username) {
+      console.log("ALREADY LOGGED IN");
+      alreadyloggedin = true;
+      return;
+    }
+  });
+
+  // If a match is found and not already logged in
+  if (match && alreadyloggedin == false) {
     console.log(socket.id, "Successful login using default credentials! From", socket.id);
 
     // Send message to the client saying that login was successful
@@ -51,6 +64,8 @@ function clientLogin(data, socket, io) {
     //console.log("[clientLogin]: Sending user ID's:", connectedclients);
     io.to('frontendmonitor').emit('update', connectedclients);
 
+  } else if (alreadyloggedin == true) {
+    socket.emit('loginFailed', `User already logged in!`)
   } else {
     // No match was found
     clientLoginSecurity(data, socket, io);
