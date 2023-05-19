@@ -3,34 +3,6 @@ const credentials = require('../credentials.json');
 const fs = require("fs");
 const path = require("path");
 
-function readUserDataDemo() {
-    // Called to run in server.js at the bottom for demo purposes
-}
-
-for (let i = 0; i < credentials.length; i++) {
-    console.log("[readUserDataDemo]:", credentials[i].username);
-}
-
-
-// Resets number for failed logins for the user to 0
-function resetLogins(data, socket, io) {
-    console.log('login reset for ', socket.id)
-    data.numberfailedlogins == 0;
-
-    // Update the user data in the credentials.json file
-    const filePath = path.join(__dirname, "../credentials.json");
-    const allData = fs.readFileSync(filePath);
-    const userData = JSON.parse(allData);
-    const newUserData = userData.map(user => {
-        if (user.username === data.username) {
-            return retrievedData;
-        } else {
-            return user;
-        }
-    });
-
-    fs.writeFileSync(filePath, JSON.stringify(newUserData, null, 2)); // Human-readable JSON formatting with 2 spaces for indentation
-}
 
 function clientLoginSecurity(data, socket, io) {
     console.log("[clientLoginSecurity]: Running...");
@@ -45,7 +17,7 @@ function clientLoginSecurity(data, socket, io) {
     // checks if numberfailedlogins is greater than or equal to 4
     // if so, log the date and start 15min timer before user can login again
     if (retrievedData.numberfailedlogins == 4) {
-        retrievedData.numberfailedlogins == 5;
+        retrievedData.numberfailedlogins = 5;
         console.log("Too many logins, please wait 15 minutes");
 
         const date = new Date();
@@ -73,7 +45,7 @@ function clientLoginSecurity(data, socket, io) {
 
             fs.writeFileSync(filePath, JSON.stringify(newUserData, null, 2)); // Human-readable JSON formatting with 2 spaces for indentation
 
-        }, 2000); // Sets timer for 15 minutes (900000)
+        }, 900000); // Sets timer for 15 minutes (900000)
 
     } else if (retrievedData.numberfailedlogins == 5) {
         console.log("FIVE: Too many logins, please wait 15 minutes");
@@ -114,4 +86,4 @@ function searchUserByUsername(username) {
     return null;
 }
 
-module.exports = { clientLoginSecurity, readUserDataDemo };
+module.exports = { clientLoginSecurity };

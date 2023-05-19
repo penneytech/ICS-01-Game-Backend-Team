@@ -5,6 +5,7 @@ This code defines a function that handles a client login attempt.  When a client
 // Import the required functions and modules
 const globals = require("../globals.js");
 const credentials = require("../credentials.json");
+const { clientLoginSecurity } = require('./clientLoginSecurity.js');
 let clientFailCounter = 0;
 
 // Define a function to handle a client login attempt
@@ -35,12 +36,12 @@ function clientLogin(data, socket, io) {
       console.log("[clientLogin]: Setting name:", socket.id + " - " + data.username);
       connectedclients[clientIndex].username = match.username;
       connectedclients[clientIndex].type = match.type;
-    
+
     }
 
     // Emit the newly logged in user to the frontend
     io.emit('initopponents', [{
-      "username": connectedclients[clientIndex].username ,
+      "username": connectedclients[clientIndex].username,
       "x": connectedclients[clientIndex].x,
       "y": connectedclients[clientIndex].y,
       "type": connectedclients[clientIndex].type,
@@ -52,12 +53,7 @@ function clientLogin(data, socket, io) {
 
   } else {
     // No match was found
-    console.log(socket.id, "Invalid username or password");
-
-    // Send message to the client saying that login was unsuccessful
-    socket.emit('loginFailed', 'Invalid username or password');
-
-    clientFailCounter++;
+    clientLoginSecurity(data, socket, io);
   }
 }
 
