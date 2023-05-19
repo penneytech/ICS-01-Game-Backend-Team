@@ -17,29 +17,31 @@ function startGame() {
         // Log time
         console.log("Second", globals.getGlobal("timerLeft"));
 
+        try {
+            if (timerLeft == 0 && betweenRounds == false) {
+                console.log("Round Over!");
+                betweenRounds = true;
+                globals.setGlobal('betweenRounds', betweenRounds)
+                timerLeft = 5000;
 
-        if (timerLeft == 0 && betweenRounds == false) {
-            console.log("Round Over!");
-            betweenRounds = true;
-            globals.setGlobal('betweenRounds', betweenRounds)
-            timerLeft = 5000;
-
-            let io = globals.getGlobal('io');
-            io.emit("betweenrounds", betweenRounds);
-            // Emit a signal to client that round is over
-
-
-        } else if (timerLeft == 0 && betweenRounds == true) {
-
-            console.log("Restarting round!");
-            timerLeft = 10000;
-            betweenRounds = false;
-            globals.setGlobal('betweenRounds', betweenRounds)
-            let io = globals.getGlobal('io');
-            io.emit("betweenrounds", betweenRounds);  
-            // Emit a signal to client that round is starting
+                let io = globals.getGlobal('io');
+                io.emit("betweenrounds", betweenRounds);
+                // Emit a signal to client that round is over
 
 
+            } else if (timerLeft == 0 && betweenRounds == true) {
+
+                console.log("Restarting round!");
+                timerLeft = 10000;
+                betweenRounds = false;
+                globals.setGlobal('betweenRounds', betweenRounds)
+                let io = globals.getGlobal('io');
+                io.emit("betweenrounds", betweenRounds);
+                // Emit a signal to client that round is starting
+            }
+
+        } catch (error) {
+            console.log(error);
         }
 
     }, 1000);
