@@ -22,7 +22,7 @@ function startGame() {
                 //console.log("Round Over!");
                 betweenRounds = true;
                 globals.setGlobal('betweenRounds', betweenRounds)
-                timerLeft = 5000;
+                timerLeft = 10000;
 
                 let io = globals.getGlobal('io');
                 io.emit("betweenrounds", betweenRounds);
@@ -32,7 +32,7 @@ function startGame() {
             } else if (timerLeft == 0 && betweenRounds == true) {
 
                 //console.log("Restarting round!");
-                timerLeft = 10000;
+                timerLeft = 120000;
                 betweenRounds = false;
                 globals.setGlobal('betweenRounds', betweenRounds)
                 let io = globals.getGlobal('io');
