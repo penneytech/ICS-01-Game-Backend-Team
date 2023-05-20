@@ -11,6 +11,9 @@ function eatPlayer(message, socket, io) {
 
     const { user, hit } = message;
 
+    if (hit == '') {
+      return;
+    } 
     // Store the hit report in the map
     hitReports.set(user, hit);
 

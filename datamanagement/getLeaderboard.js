@@ -1,6 +1,8 @@
 const fs = require('fs');
 
 function sortUsersByPoints() {
+    console.log('[sortUsersByPoints]: Sorting users by points.');
+    
     // Read the existing user data from the users.json file
     const userData = JSON.parse(fs.readFileSync('credentials.json'));
 

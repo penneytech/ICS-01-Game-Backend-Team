@@ -1,5 +1,5 @@
 const globals = require('../globals.js');
-const writeScore = require('../score/writeScore.js');
+//const writeScore = require('../score/writeScore.js');
 const inGameLeaderboard = require('../score/inGameLeaderboard.js');
 
 function removePlayer(socket, io) {
@@ -15,7 +15,7 @@ function removePlayer(socket, io) {
     console.log('[clientDisconnect]: Socket ID found!', socket.id)
 
     if (connectedclients[index].username != '') {
-      writeScore(connectedclients[index].username, connectedclients[index].currentscore);
+      //writeScore(connectedclients[index].username, connectedclients[index].currentscore);
       connectedclients[index].currentscore = 0;
       io.emit('removeopponent', connectedclients[index].username)
       let ingamescore = inGameLeaderboard(connectedclients);
