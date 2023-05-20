@@ -51,7 +51,7 @@ function startGame() {
                     randomPosition(socket);
                 }
 
-                timerLeft = 10000;
+                timerLeft = 120000;
                 betweenRounds = false;
                 globals.setGlobal('betweenRounds', betweenRounds)
                 io.emit("betweenrounds", betweenRounds);
