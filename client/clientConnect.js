@@ -19,13 +19,13 @@ function clientConnect(socket, io) {
 
     let connectedclients = globals.getGlobal('connectedclients');
 
-    // Send the time remaining in the round
-    const timerLeft = globals.getGlobal('timerLeft')
-    socket.emit("timerleft", timerLeft);
-
-        // Send the round state
+    // Send the round state
     const betweenRounds = globals.getGlobal('betweenRounds')
     socket.emit("betweenrounds", betweenRounds);
+
+     // Send the time remaining in the round
+     const timerLeft = globals.getGlobal('timerLeft')
+     socket.emit("timerleft", timerLeft);
 
     // Send the client a random start position and 
     const randomposition = randomPosition(socket);
