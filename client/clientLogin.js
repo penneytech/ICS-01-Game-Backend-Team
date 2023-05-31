@@ -1,24 +1,27 @@
-/*
-This code defines a function that handles a client login attempt.  When a client attempts to log in, the function checks if the provided username and password match any of the default credentials stored in the 'credentials.json' file. If a match is found, the function sends a 'loginSucceed' message to the client, updates the random connected client to include the username of the logged-in user, emits the 'update' event to the 'frontendmonitor' room with the current list of user IDs, and exports the function for other modules to use. If no match is found, the function sends a 'loginFailed' message to the client indicating that the provided credentials were invalid.
-*/
-
-// Import the required functions and modules
+// Import the required functions, modules, and MongoDB client
 const globals = require("../globals.js");
-const credentials = require("../credentials.json");
+const { MongoClient } = require("mongodb");
 const { clientLoginSecurity } = require('./clientLoginSecurity.js');
 let clientFailCounter = 0;
 
+// MongoDB setup
+const uri = "mongodb+srv://ICS3U01:burlingtoncentralics3u@ics3u01.ckxzf5i.mongodb.net/game1?retryWrites=true&w=majority"; // replace with your connection string
+
+const client = new MongoClient(uri);
+
 // Define a function to handle a client login attempt
-function clientLogin(data, socket, io) {
+async function clientLogin(data, socket, io) {
   let alreadyloggedin = false;
 
   console.log("");
 
-  // Check if provided username and password match any of the default credentials
-  const match = credentials.find(cred =>
-    cred.username === data.username &&
-    cred.password === data.password
-  );
+  // Connect to MongoDB and query for credentials
+  await client.connect();
+  const collection = client.db("<dbname>").collection("<collectionName>"); // replace with your DB and collection names
+  const match = await collection.findOne({
+    username: data.username,
+    password: data.password,
+  });
 
   // Check to see if user already logged in
   let connectedclients = globals.getGlobal('connectedclients');
@@ -49,7 +52,6 @@ function clientLogin(data, socket, io) {
       console.log("[clientLogin]: Setting name:", socket.id + " - " + data.username);
       connectedclients[clientIndex].username = match.username;
       connectedclients[clientIndex].type = match.type;
-
     }
 
     // Emit the newly logged in user to the frontend
@@ -70,18 +72,17 @@ function clientLogin(data, socket, io) {
     // No match was found
     clientLoginSecurity(data, socket, io);
   }
-}
 
-function deactivateLoginButton() {
+  if (clientFailCounter == 4) {
+    console.log(" !!WARNING!! Too many failed login attemps.");
+    console.log("One more attempt before IP is stolen");
+  } else if (clientFailCounter >= 5) {
+    deactivateLoginButton();
+    clientFailCounter == 0;
+  }
 
-}
-
-if (clientFailCounter == 4) {
-  console.log(" !!WARNING!! Too many failed login attemps.");
-  console.log("One more attempt before IP is stolen");
-} else if (clientFailCounter >= 5) {
-  deactivateLoginButton();
-  clientFailCounter == 0;
+  // Close the MongoDB connection after we're done
+  await client.close();
 }
 
 // Export the function for other modules to use
