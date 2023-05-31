@@ -1,50 +1,47 @@
-const fs = require('fs');
+const { MongoClient } = require('mongodb');
 const globals = require('../globals.js')
 
-function updateCharacters(character, socket) {
-    
-    console.log('[updateCharacters]:', character, socket.id)
-    fs.readFile('credentials.json', 'utf8', (err, data) => {
-        if (err) {
-            console.error('Error reading credentials.json:', err);
-            return;
-        }
+// MongoDB setup
+const client = globals.getGlobal('mongoDbClient');
 
-        // Set the character in connectedclients
-        let connectedclients = globals.getGlobal('connectedclients');
+async function updateCharacters(character, socket) {
 
-        let index = connectedclients.indexOf(connectedclients.find(client => client.id == socket.id))
-        console.log(index)
-        // Write the character to the credentials json
-        if (index != -1) {
-            connectedclients[index].type = character;
-            globals.setGlobal('connectedclients', connectedclients);
-            console.log(connectedclients);
-        }
+    console.log('[updateCharacters]:', character, socket.id);
 
-        let credentials = JSON.parse(data);
-        let foundUser = false;
+    // Set the character in connectedclients
+    let connectedclients = globals.getGlobal('connectedclients');
 
-        credentials.forEach((user) => {
-            if (user.username == connectedclients[index].username) {
-                user.type = character;
-                foundUser = true;
-            }
-        });
+    let index = connectedclients.indexOf(connectedclients.find(client => client.id == socket.id))
+    console.log(index)
 
-        if (!foundUser) {
+    // Write the character to the MongoDB
+    if (index != -1) {
+        connectedclients[index].type = character;
+        globals.setGlobal('connectedclients', connectedclients);
+        console.log(connectedclients);
+    }
+
+    try {
+        await client.connect();
+        const collection = client.db("game1").collection("game1"); // replace with your DB and collection names
+
+        // Fetch the user
+        let user = await collection.findOne({ username: connectedclients[index].username });
+
+        if (!user) {
             console.error('User not found:', connectedclients[index].username);
             return;
         }
 
-        fs.writeFile('credentials.json', JSON.stringify(credentials, null, 2), 'utf8', (err) => {
-            if (err) {
-                console.error('Error writing to credentials.json:', err);
-            } else {
-                console.log('Credentials updated successfully.');
-            }
-        });
-    });
+        // Update the user's character type
+        await collection.updateOne(
+            { username: user.username },
+            { $set: { type: character } }
+        );
+        console.log('User character updated successfully.');
+    } catch (error) {
+        console.error('Error updating user character:', error.message);
+    } 
 }
 
 module.exports = updateCharacters;

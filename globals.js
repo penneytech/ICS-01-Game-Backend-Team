@@ -4,8 +4,10 @@ const globals = {
     io: [],
     clients: [], // Array of all websocket clients
     foodArray: [],
-    timerLeft: [],
-    betweenRounds: [],
+    timerLeft: 10000,
+    betweenRounds: false,
+    leaderboarddata: [],
+    mongoDbClient: [],
 };
 
 // Define a function to set a global variable

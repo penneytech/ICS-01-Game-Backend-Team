@@ -1,3 +1,13 @@
+const globals = require('./globals.js');
+const { MongoClient } = require("mongodb");
+
+// MongoDB setup
+const uri = "mongodb+srv://ICS3U01:burlingtoncentralics3u@ics3u01.ckxzf5i.mongodb.net/game1?retryWrites=true&w=majority"; // replace with your connection string
+const client = new MongoClient(uri);
+
+globals.setGlobal('mongoDbClient', client);
+
+
 // Server Setup & Dependancies 
 const express = require('express');
 const cors = require('cors');
@@ -20,12 +30,13 @@ const clientLogin = require('./client/clientLogin.js');
 const clientMessage = require('./client/clientMessage.js');
 const clientDisconnect = require('./client/clientDisconnect.js');
 const sortUsersByPoints = require('./datamanagement/getLeaderboard.js');
-const startGame = require('./multiplayer/timer.js');
 const fooddelete = require('./food/foodDelete.js');
 const updatePosition = require('./multiplayer/updatePosition.js');
 const getUserStats = require('./datamanagement/getUserStats.js')
 const updateCharacters = require('./multiplayer/updateCharacter.js')
 const eatPlayer = require('./multiplayer/playerHit.js')
+const startGame = require('./multiplayer/timer.js')
+startGame();
 
 // Generate Food
 require('./food/foodManagement.js');
@@ -59,19 +70,15 @@ io.on('connection', (socket) => {
         eatPlayer(message, socket, io)
     });
 
-    socket.on('userstats', (message) => {
-        socket.emit('userstatsdata', getUserStats(message))
-    });
-
+    socket.on('userstats', async (message) => {
+        const userStatsData = await getUserStats(message);
+        socket.emit('userstatsdata', userStatsData);
+      });
+      
     socket.on('updatecharacter', (message) => {
         console.log('updatecharacter', message);
         updateCharacters(message, socket)
     });
-
-    // socket.on('gameTimer', (message) => {
-    //     console.log('gameTimer', message);
-    //     startGame(message, socket)
-    // });
 
     // Handle Client Disconnections
     socket.on('disconnect', () => {

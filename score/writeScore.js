@@ -1,60 +1,58 @@
-const fs = require('fs');
-const globals = require('../globals.js'); // Assuming globals is a module
+const { MongoClient } = require('mongodb');
+const globals = require('../globals.js');
 
-function updateScores() {
+// MongoDB setup
+const client = globals.getGlobal('mongoDbClient');
+
+async function updateScores() {
   const connectedclients = globals.getGlobal('connectedclients');
 
-  fs.readFile('credentials.json', 'utf8', (err, data) => {
-    if (err) {
-      console.error('[updateScores]: Error reading credentials file:', err);
-      return;
+  try {
+    await client.connect();
+    const collection = client.db("game1").collection("game1"); // replace with your DB and collection names
+
+    // Loop through all connected clients
+    for (let client of connectedclients) {
+      // Skip this client if their score is 0
+      if (client.score === 0) continue;
+
+      console.log('[updateScores]: Updating score for:', client.username, 'Score:', client.currentscore);
+
+      const user = await collection.findOne({ username: client.username });
+
+      if (user) {
+
+        if (client.currentscore != 0) {
+          const scoreEntry = {
+            score: client.currentscore,
+            datestamp: new Date().toISOString()
+          };
+
+          user.score_history.push(scoreEntry);
+          user.total_points = user.score_history.reduce((total, entry) => total + entry.score, 0);
+          user.top_score = Math.max(...user.score_history.map(entry => entry.score));
+          client.currentscore = 0;
+
+          // Update user in MongoDB
+          await collection.updateOne({ username: client.username }, { $set: user });
+        }
+      } else {
+        console.error('[updateScores]: User not found:', client.username);
+        continue;
+      }
     }
 
-    try {
-      const credentials = JSON.parse(data);
+    // Save connected clients
+    globals.setGlobal('connectedclients', connectedclients);
 
-      // Loop through all connected clients
-      connectedclients.forEach(client => {
-        // Skip this client if their score is 0
-        if (client.score === 0) return;
+    console.log('[updateScores]: Scores updated successfully.');
 
-        console.log('[updateScores]: Updating score for:', client.username, 'Score:', client.score);  // New log line
-
-        const user = credentials.find(user => user.username === client.username);
-
-        if (user) {
-
-          if (client.currentscore != 0) {
-            const scoreEntry = {
-              score: client.currentscore,
-              datestamp: new Date().toISOString()
-            };
-            user.score_history.push(scoreEntry);
-            user.total_points = user.score_history.reduce((total, entry) => total + entry.score, 0);
-            user.top_score = Math.max(...user.score_history.map(entry => entry.score));
-            client.currentscore = 0;
-          }
-        } else {
-          console.error('[updateScores]: User not found:', client.username);
-          return;
-        }
-      });
-
-      // Save connected clients 
-      globals.setGlobal('connectedclients', connectedclients);
-
-      // Write the updated credentials to file
-      fs.writeFile('credentials.json', JSON.stringify(credentials, null, 2), 'utf8', (err) => {
-        if (err) {
-          console.error('[updateScores]: Error writing credentials file:', err);
-        } else {
-          console.log('[updateScores]: Credentials file updated successfully.');
-        }
-      });
-    } catch (err) {
-      console.error('[updateScores]: Error parsing credentials file:', err);
-    }
-  });
+  } catch (error) {
+    console.error('[updateScores]: Error interacting with MongoDB:', error.message);
+  } finally {
+    // Close the MongoDB connection after we're done
+   // await client.close();
+  }
 }
 
 module.exports = updateScores;

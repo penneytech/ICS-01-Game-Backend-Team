@@ -2,26 +2,28 @@
 const globals = require("../globals.js");
 const { MongoClient } = require("mongodb");
 const { clientLoginSecurity } = require('./clientLoginSecurity.js');
-let clientFailCounter = 0;
 
-// MongoDB setup
-const uri = "mongodb+srv://ICS3U01:burlingtoncentralics3u@ics3u01.ckxzf5i.mongodb.net/game1?retryWrites=true&w=majority"; // replace with your connection string
+// // MongoDB setup
+// const uri = "mongodb+srv://ICS3U01:burlingtoncentralics3u@ics3u01.ckxzf5i.mongodb.net/game1?retryWrites=true&w=majority"; // replace with your connection string
 
-const client = new MongoClient(uri);
+const client = globals.getGlobal('mongoDbClient');
 
 // Define a function to handle a client login attempt
 async function clientLogin(data, socket, io) {
+  console.log("[clientLogin]: Client login attempt:", data);
   let alreadyloggedin = false;
 
   console.log("");
 
   // Connect to MongoDB and query for credentials
   await client.connect();
-  const collection = client.db("<dbname>").collection("<collectionName>"); // replace with your DB and collection names
+  const collection = client.db("game1").collection("game1"); // replace with your DB and collection names
   const match = await collection.findOne({
     username: data.username,
     password: data.password,
   });
+
+  console.log("Match:", match);
 
   // Check to see if user already logged in
   let connectedclients = globals.getGlobal('connectedclients');
@@ -65,24 +67,19 @@ async function clientLogin(data, socket, io) {
     // Emit the 'update' event to the 'frontendmonitor' room with the current list of user IDs
     //console.log("[clientLogin]: Sending user ID's:", connectedclients);
     io.to('frontendmonitor').emit('update', connectedclients);
+    // Close the MongoDB connection after we're done
+    //await client.close();
 
   } else if (alreadyloggedin == true) {
+
     socket.emit('loginFailed', `User already logged in!`)
+    // Close the MongoDB connection after we're done
+    //await client.close();
+
   } else {
     // No match was found
     clientLoginSecurity(data, socket, io);
   }
-
-  if (clientFailCounter == 4) {
-    console.log(" !!WARNING!! Too many failed login attemps.");
-    console.log("One more attempt before IP is stolen");
-  } else if (clientFailCounter >= 5) {
-    deactivateLoginButton();
-    clientFailCounter == 0;
-  }
-
-  // Close the MongoDB connection after we're done
-  await client.close();
 }
 
 // Export the function for other modules to use

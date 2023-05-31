@@ -1,6 +1,7 @@
 const GAME_DURATION = 300000; // 5 minutes in milliseconds
 const RESTART_INTERVAL = 10000; // 30 seconds in milliseconds-
 let timerLeft = 10000; //timerLeft updater
+
 globals = require("../globals.js");
 const updateScores = require('../score/writeScore.js');
 const sortUsersByPoints = require('../datamanagement/getLeaderboard.js');
@@ -22,7 +23,7 @@ function startGame() {
 
 
         try {
-            if (timerLeft == 0 && betweenRounds == false) {
+            if (timerLeft <= 0 && betweenRounds == false) {
                 let io = globals.getGlobal('io');
                 console.log("Round Over!");
                 betweenRounds = true;
@@ -37,7 +38,7 @@ function startGame() {
                 // Update the leaderboard
                 sortUsersByPoints();
 
-            } else if (timerLeft == 0 && betweenRounds == true) {
+            } else if (timerLeft <= 0 && betweenRounds == true) {
                 let io = globals.getGlobal('io');
 
                 console.log("Restarting round!");
@@ -64,6 +65,5 @@ function startGame() {
     }, 1000);
 }
 
-module.exports = startGame();
+module.exports = startGame;
 
-// Start the game

@@ -1,89 +1,79 @@
+const { MongoClient } = require("mongodb");
+const globals = require("../globals.js");
 
-const credentials = require('../credentials.json');
-const fs = require("fs");
-const path = require("path");
-
-
-function clientLoginSecurity(data, socket, io) {
+async function clientLoginSecurity(data, socket, io) {
     console.log("[clientLoginSecurity]: Running...");
 
-    let retrievedData = searchUserByUsername(data.username);
-    console.log("[clientLoginSecurity]: retrieving user - ", retrievedData);
-    if (retrievedData == null) {
-        console.log("[clientLoginSecurity]: retrieving user - Not found");
-        return;
-    }
+    // const uri = "mongodb+srv://ICS3U01:burlingtoncentralics3u@ics3u01.ckxzf5i.mongodb.net/game1?retryWrites=true&w=majority";
+    // const client = new MongoClient(uri);
+    const client = globals.getGlobal('mongoDbClient');
 
-    // checks if numberfailedlogins is greater than or equal to 4
-    // if so, log the date and start 15min timer before user can login again
-    if (retrievedData.numberfailedlogins == 4) {
-        retrievedData.numberfailedlogins = 5;
-        console.log("Too many logins, please wait 15 minutes");
+    try {
+        await client.connect();
+        const collection = client.db("game1").collection("game1");
+        let retrievedData = await collection.findOne({ username: data.username });
 
-        const date = new Date();
-        retrievedData.lastlogindate = date;
-        console.log("[clientLoginSecurity]:", retrievedData);
+        console.log("[clientLoginSecurity]: retrieving user - ", retrievedData);
 
-        setTimeout(function() {
-            console.log("")
-            console.log("setTimeout Created for", socket.id, retrievedData.user)
+        if (retrievedData == null) {
+            console.log("[clientLoginSecurity]: retrieving user - Not found");
+            return;
+        }
 
-            // resetLogins(data, socket, io);
-            retrievedData.numberfailedlogins = 0;
+        if (retrievedData.numberfailedlogins == 4) {
+            retrievedData.numberfailedlogins = 5;
+            console.log("Too many logins, please wait 15 minutes");
 
-            // Update the user data in the credentials.json file
-            const filePath = path.join(__dirname, "../credentials.json");
-            const allData = fs.readFileSync(filePath);
-            const userData = JSON.parse(allData);
-            const newUserData = userData.map(user => {
-                if (user.username === retrievedData.username) {
-                    return retrievedData;
-                } else {
-                    return user;
-                }
-            });
+            const date = new Date();
+            retrievedData.lastlogindate = date;
+            console.log("[clientLoginSecurity]:", retrievedData);
 
-            fs.writeFileSync(filePath, JSON.stringify(newUserData, null, 2)); // Human-readable JSON formatting with 2 spaces for indentation
+            await collection.updateOne(
+                { username: retrievedData.username },
+                { $set: retrievedData }
+            );
 
-        }, 900000); // Sets timer for 15 minutes (900000)
+            setTimeout(async function () {
+                const clientTimeout = new MongoClient(uri);
+                await clientTimeout.connect();
 
-    } else if (retrievedData.numberfailedlogins == 5) {
-        console.log("FIVE: Too many logins, please wait 15 minutes");
-        socket.emit('loginFailed', "Account locked for 15 minutes.")
-    } else {
-        retrievedData.numberfailedlogins = retrievedData.numberfailedlogins + 1;
-        const date = new Date();
-        retrievedData.lastlogindate = date;
-        console.log("[clientLoginSecurity]:", retrievedData);
-        const numbertriesremaining = 5 - retrievedData.numberfailedlogins;
-        socket.emit('loginFailed', `Incorrect username or password combination. ` + numbertriesremaining + ` tries remaining.`)
-    }
+                const collectionTimeout = clientTimeout.db("game1").collection("game1");
+                
+                console.log("setTimeout Created for", socket.id, retrievedData.user)
 
-    // Update the user data in the credentials.json file
-    const filePath = path.join(__dirname, "../credentials.json");
-    const allData = fs.readFileSync(filePath);
-    const userData = JSON.parse(allData);
-    const newUserData = userData.map(user => {
-        if (user.username === retrievedData.username) {
-            return retrievedData;
+                retrievedData.numberfailedlogins = 0;
+                await collectionTimeout.updateOne(
+                    { username: retrievedData.username },
+                    { $set: retrievedData }
+                );
+                
+                await clientTimeout.close();
+            }, 900000);
+        } else if (retrievedData.numberfailedlogins == 5) {
+            console.log("FIVE: Too many logins, please wait 15 minutes");
+            socket.emit('loginFailed', "Account locked for 15 minutes.")
         } else {
-            return user;
-        }
-    });
+            if (retrievedData.numberfailedlogins === undefined) {
+                retrievedData.numberfailedlogins = 0;
+            }
+            retrievedData.numberfailedlogins = retrievedData.numberfailedlogins + 1;
+            const date = new Date();
+            retrievedData.lastlogindate = date;
+            console.log("[clientLoginSecurity]:", retrievedData);
+            const numbertriesremaining = 5 - retrievedData.numberfailedlogins;
+            socket.emit('loginFailed', `Incorrect username or password combination. ` + numbertriesremaining + ` tries remaining.`)
 
-    fs.writeFileSync(filePath, JSON.stringify(newUserData, null, 2)); // Human-readable JSON formatting with 2 spaces for indentation
-}
-
-function searchUserByUsername(username) {
-    const filePath = path.join(__dirname, "../credentials.json");
-    const returnedjson = fs.readFileSync(filePath);
-    const userData = JSON.parse(returnedjson);
-    for (let user of userData) {
-        if (user.username === username) {
-            return user;
+            await collection.updateOne(
+                { username: retrievedData.username },
+                { $set: retrievedData }
+            );
         }
+    } catch (error) {
+        console.error("[clientLoginSecurity]: Error occurred", error);
+    } finally {
+        // Close the MongoDB connection after we're done
+       // await client.close();
     }
-    return null;
 }
 
 module.exports = { clientLoginSecurity };
