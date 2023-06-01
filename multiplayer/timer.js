@@ -35,10 +35,9 @@ function startGame() {
                 // Record everyone's scores.
                 updateScores();
 
+            } else if (timerLeft <= 0 && betweenRounds == true) {
                 // Update the leaderboard
                 sortUsersByPoints();
-
-            } else if (timerLeft <= 0 && betweenRounds == true) {
                 let io = globals.getGlobal('io');
 
                 console.log("Restarting round!");
