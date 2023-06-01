@@ -1,10 +1,9 @@
-const { MongoClient } = require('mongodb');
 const globals = require("../globals.js")
-// MongoDB setup
-// const uri = "mongodb+srv://ICS3U01:burlingtoncentralics3u@ics3u01.ckxzf5i.mongodb.net/game1?retryWrites=true&w=majority"; // replace with your connection string
-const client = globals.getGlobal('mongoDbClient');
 
 async function getUserStats(inputusername) {
+    // MongoDB setup
+    const client = globals.getGlobal('mongoDbClient');
+
     console.log('[getUserStats]:', inputusername);
 
     try {

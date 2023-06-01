@@ -1,11 +1,8 @@
-const { MongoClient } = require("mongodb");
 const globals = require("../globals.js");
 
 async function clientLoginSecurity(data, socket, io) {
     console.log("[clientLoginSecurity]: Running...");
 
-    // const uri = "mongodb+srv://ICS3U01:burlingtoncentralics3u@ics3u01.ckxzf5i.mongodb.net/game1?retryWrites=true&w=majority";
-    // const client = new MongoClient(uri);
     const client = globals.getGlobal('mongoDbClient');
 
     try {

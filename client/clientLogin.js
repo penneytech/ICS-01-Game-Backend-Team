@@ -1,15 +1,14 @@
 // Import the required functions, modules, and MongoDB client
 const globals = require("../globals.js");
-const { MongoClient } = require("mongodb");
 const { clientLoginSecurity } = require('./clientLoginSecurity.js');
 
-// // MongoDB setup
-// const uri = "mongodb+srv://ICS3U01:burlingtoncentralics3u@ics3u01.ckxzf5i.mongodb.net/game1?retryWrites=true&w=majority"; // replace with your connection string
-
-const client = globals.getGlobal('mongoDbClient');
 
 // Define a function to handle a client login attempt
 async function clientLogin(data, socket, io) {
+  // MongoDB setup
+  const client = globals.getGlobal('mongoDbClient');
+
+
   console.log("[clientLogin]: Client login attempt:", data);
   let alreadyloggedin = false;
 
