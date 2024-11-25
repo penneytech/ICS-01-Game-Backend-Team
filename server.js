@@ -8,10 +8,10 @@ const client = new MongoClient(uri);
 
 globals.setGlobal('mongoDbClient', client);
 
-
-// Server Setup & Dependancies 
+// Server Setup & Dependencies
 const express = require('express');
 const cors = require('cors');
+const path = require('path'); // Required for resolving paths
 const app = express();
 const server = require('http').createServer(app);
 const io = require('socket.io')(server, {
@@ -22,7 +22,14 @@ const io = require('socket.io')(server, {
 });
 const PORT = process.env.PORT || 3000;
 app.use(cors());
-app.use(express.static('public'));
+
+// Serve static files from the frontend directory
+app.use(express.static(path.join(__dirname, 'frontend')));
+
+// Catch-all route to serve index.html for SPA routes
+app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname, 'frontend', 'index.html'));
+});
 
 // Our Imports
 const clientConnect = require('./client/clientConnect.js');
@@ -45,7 +52,6 @@ require('./food/foodManagement.js');
 let intervalID;
 
 io.on('connection', (socket) => {
-
     // Handle Client Connections
     clientConnect(socket, io);
 
@@ -58,7 +64,6 @@ io.on('connection', (socket) => {
         clientLogin(message, socket, io)
     });
 
-    // Handle Client Messages
     socket.on('message', (message) => {
         clientMessage(message, socket, io)
     });
@@ -74,38 +79,33 @@ io.on('connection', (socket) => {
     socket.on('userstats', async (message) => {
         const userStatsData = await getUserStats(message);
         socket.emit('userstatsdata', userStatsData);
-      });
-      
+    });
+
     socket.on('updatecharacter', (message) => {
         console.log('updatecharacter', message);
         updateCharacters(message, socket)
     });
 
-    // Handle Client Disconnections
     socket.on('disconnect', () => {
         clientDisconnect(socket, io);
     });
 
     socket.on('updateclientposition', (message) => {
-        // Expect {"username:" //, "x": //, "y": //}
         updatePosition(message, socket, io);
     });
 
-    // Start sending test messages to all clients in the 'users' room
+    // Test message to all clients in the 'users' room
     if (!intervalID) {
         intervalID = setInterval(() => {
-            //console.log("Test message sent to users")
             io.to('user').emit(
                 'message',
                 'This is a test message from the server!');
         }, 10000);
     }
-
 });
 
 server.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
-
 });
 
 sortUsersByPoints();

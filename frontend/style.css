@@ -1,0 +1,235 @@
+@import url('https://fonts.googleapis.com/css2?family=Comic+Neue:wght@700&display=swap');
+
+html, body {
+  height: 100%;
+  width: 100%;
+  margin: 0px;
+  text-align: center;
+}
+
+html {
+  background-image: url("images/aaaaav4.png");
+  background-size: cover;
+}
+
+#myCanvas{
+    border-style: solid;
+  border-color: #a8feff;
+     background-image: url("images/Map Background.png");
+  background-size: cover;
+  flex: 1;
+
+}
+
+#content {
+    display: flex;
+    width: 100%;
+    flex-direction: column;
+    align-items: center;
+  position: relative;
+  margin: 0px;
+  padding: 0px;
+}
+
+#loginmessagediv {
+    color: #f7f7f7;
+    font-size: 20px;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    text-shadow: 0px 0px 2px #000000;
+    font-weight: bold;
+}
+
+#logindiv {
+ /* font-family: 'Comic Neue'; */
+  font-size: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center; /* Center vertically */
+  align-items: center; /* Center horizontally */
+  box-shadow: 0 0 0 3px white; /* added box-shadow property */
+  padding: 20px;
+  background-color: #ffffff;
+  border-radius: 3px;
+  width: 300px;
+}
+
+input {
+     /* font-family: 'Comic Neue', cursive; */
+    margin: 8px;
+    font-size: 18px;
+    background-color: #ffdbdb;
+    color: #5a3542;
+    padding: 6px;
+    border-radius: 5px;
+    width: 285px;
+  border-color: #d0dfe2;
+}
+
+
+#sendButton {
+  background-color: #82cfd9;
+  color: white;
+ font-family: 'Comic Neue', cursive;
+  font-weight: bold;
+  width: 300px;
+  border-radius: 5px;
+  box-shadow: 0 5px #4f808c;
+}
+#sendButton:hover{
+    background-color: #74afbe;
+}
+#sendButton:active{
+  background-color: #82cfd9;
+  box-shadow: none;
+  transform: translateY(2px);
+}
+button {
+    border-style: none;
+    padding: 8px;
+    width: min-content;
+    font-size: 22px;
+    color: black;
+    background-color: #cec474;
+    border-radius: 10px;
+    transition: 0.2s;
+}
+button:hover {
+    border-style: none;
+    padding: 8px;
+    width: min-content;
+    font-size: 22px;
+    color: white;
+    background-color: #ce7373;
+    border-radius: 10px;
+    transition: 0.2s;
+}
+
+#my-leaderboard-table {
+  width: 340px;
+  max-width: 400px; 
+  background-color: white;
+  box-shadow: 0 0 0 3px white; /* added box-shadow property */
+  border-radius: 3px;
+  margin-bottom: 35px;
+}
+
+#my-leaderboard-table td {
+font-size: 20px;
+}
+
+#my-leaderboard-table tr:first-child {
+  background-color: #dd3030;
+  color: white;
+}
+
+#my-leaderboard-table tr:nth-child(2) td:first-child {
+  background-color: #ed7996;
+  color: black;
+}
+
+#my-leaderboard-table tr:nth-child(2) td:nth-child(2) {
+  background-color: #ed7996;
+  color: black;
+}
+
+#my-leaderboard-table tr:nth-child(2) td:last-child {
+  background-color: #ed7996;
+  color: black;
+}
+
+#my-leaderboard-table tr:nth-child(3) td:first-child {
+  background-color: #daba98;
+  color: black;
+}
+
+#my-leaderboard-table tr:nth-child(3) td:nth-child(2) {
+  background-color: #daba98;
+  color: black;
+}
+
+#my-leaderboard-table tr:nth-child(3) td:last-child {
+  background-color: #daba98;
+  color: black;
+}
+
+#my-leaderboard-table tr:nth-child(4) td:first-child {
+  background-color: #92e2e9;
+  color: black;
+}
+
+#my-leaderboard-table tr:nth-child(4) td:nth-child(2) {
+  background-color: #92e2e9; 
+  color: black;
+}
+
+#my-leaderboard-table tr:nth-child(4) td:last-child {
+  background-color: #92e2e9;
+  color: black;
+}
+
+#play-button {
+  font-family: Arial, sans-serif;
+  font-weight: bold;
+  position: relative;
+  width: 350px;
+  padding: 20px;
+  background-color: #bb79c8;
+  color: white;
+  font-size: 24px;
+  text-align: center;
+  border-radius: 5px;
+  top: 30%;
+  box-shadow: 0 5px #7f4d89;
+  margin: 2px;
+}
+#play-button:hover{
+    background-color: #a469b0;
+}
+#play-button:active{
+  background-color: #875492;
+  box-shadow: none;
+  transform: translateY(2px);
+}
+#customize {
+  display: flex;
+  width: 350px;
+  height: 200px;
+  background-color: white;
+}
+
+#arrow1, #head, #arrow2 {
+  flex: 1;
+  height: 100%,;
+  justify-content: center;
+  align-items: center;
+  display: flex;
+  color: pink;
+}
+
+#head {
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+#userstatsdiv {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+#customization {
+  margin-top: 10px;
+  background-color: white;
+  padding: 25px;
+  width: 100%;
+  max-width: 300px;
+  font-family: Arial, sans-serif;
+  color: #735026;
+}
+
+#logo {
+    width: 118px;
+    padding: 5px;
+}
